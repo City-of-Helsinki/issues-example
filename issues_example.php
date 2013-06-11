@@ -23,13 +23,16 @@ L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/
 }).addTo(map);
 var RedIcon = L.Icon.Default.extend({
             options: {
-            	    iconUrl: 'marker-icon-red.png' 
+            	    iconUrl: 'icons/marker-icon-red.png' 
             }
          });
 var redIcon = new RedIcon();
 <?php
 $url = 'https://asiointi.hel.fi/palautews/rest/v1/requests.json';
 $ch = curl_init();
+
+// Curl settings
+// SSL version 1 is TLS 1.0
 $opts = array(  CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_TIMEOUT => 4,
