@@ -5,4 +5,6 @@ The example web page which shows all service requests on a map. Service requests
 
 Helsinki issue reporting API is defined in http://dev.hel.fi/apis/issuereporting.
 
-Example uses PHP and leaflet javascript library.  
+Example uses PHP and leaflet javascript library. 
+
+You can find this example running here http://dev.hel.fi/open311-test/issues_example.php 
