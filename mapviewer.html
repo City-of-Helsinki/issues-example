@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mapviewer for issue reporting API</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+ <!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+ <![endif]-->
+<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+<link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<table>
+<tr>
+<td valign="top"><div id="map" style="width: 800px; height: 600px"></div>
+<div id="image">
+<pre class="brush: js">
+$.ajax({
+  url:'https://asiointi.hel.fi/palautews/rest/v1/requests.json?extensions=true',
+  dataType: 'json',
+  success:function(json){
+    $.each(json, function(entryIndex, entry) {
+       var marker = L.marker([entry['lat'],entry['long']]);
+       marker._serviceId = entry['service_request_id'];
+       marker.bindPopup(t);
+       group.addLayer(marker);
+    });
+    group.addTo(map);
+    $("#json_response").html(JSON.stringify(json,null,2));
+  },
+  error:function(){
+    alert("Error");
+  },
+});
+
+map.on('popupopen', function(e) {
+  var id;
+  if (e.popup._source._serviceId != undefined) id = e.popup._source._serviceId;
+  if (id != undefined){
+    var latlng = e.popup._source.getLatLng();
+    var url = 'https://asiointi.hel.fi/palautews/rest/v1/requests/' + id + '.json';
+    $("#url").html('<a href=' + url + '>' + url + '</a>');
+    $.ajax({
+      url:url,
+      dataType: 'json',
+      success:function(json){
+	$.each(json, function(entryIndex, entry) {
+        var response = "" +  json['description'] + '</br>';
+        if (json['media_url'] != undefined) {
+          var img = "<img src =\"" + json['media_url'] + "\" />";
+          response += img
+        }
+        $("#image").html(response)
+        $("#json_response").html(JSON.stringify(json,null, 4));
+      },
+      error:function(){
+        alert("Error");
+      },
+    });
+  }
+});
+
+</pre>
+</div></td>
+<td valign="top">
+URL: <input size="60" type="text" id="request_url" name="serviceid"/>
+<button onclick="fetchReports()">Try it!</button>
+<div id="url"></div>
+<pre id="json_response"></pre></td>
+</tr>
+</table>
+<script>
+$(document).ready(function(){
+        var map = L.map('map').setView([60.20, 24.93125813367534], 11);
+        L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/256/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 18 }).addTo(map);
+
+        if (navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(centerMap,error);
+        }
+
+        function centerMap(position){
+                map.setView([position.coords.latitude, position.coords.longitude], 15);
+        }
+
+        function error(msg){
+        }
+
+        //TODO: red icon for open requests
+        var RedIcon = L.Icon.Default.extend({
+                options: {
+                        iconUrl: 'icons/marker-icon-red.png'
+                }
+        });
+        var redIcon = new RedIcon();
+  	SyntaxHighlighter.all();     
+        getReports('https://asiointi.hel.fi/palautews/rest/v1/requests.json?extensions=true&start_date=2013-11-12T08:03:46Z');
+	
+	window.getReports=getReports;
+ 	var group = L.layerGroup();	
+	function getReports(url) {
+		$("#url").html('<a href=' + url + '>' + url + '</a>');
+		$.ajax({
+                        url:url,
+                        dataType: 'json', // CORS support in API
+                        success:function(json){
+                                var response = "";
+                                $.each(json, function(entryIndex, entry) {
+                                        if (entry['lat'] == undefined ||  entry['long'] == undefined) return true;
+					response += "<p>" + entry['description'] + " : " + entry['service_request_id'] + " : " + entry['lat'] + " : " + entry['long'] +  "</p>";
+					var t= "" + entry['service_request_id'];
+					var latlng = new L.LatLng(entry['lat'],entry['long']);
+                                        var marker = L.marker([entry['lat'],entry['long']]);
+                                        marker._serviceId = "" + entry['service_request_id'];;
+					if (entry['status'] == "open") marker.setIcon(redIcon);
+					marker.bindPopup(t);
+                                        group.addLayer(marker);
+                                });
+				$("#json_response").html(JSON.stringify(json,null,2));
+                                group.addTo(map);
+                        },
+                        error:function(){
+                                alert("Error");
+                        },
+                });
+        }
+	map.on('popupopen', function(e) {
+		var id;
+		if (e.popup._source._serviceId != undefined) id = e.popup._source._serviceId;
+		if (id != undefined){ 
+			var latlng = e.popup._source.getLatLng();
+			var url = 'https://asiointi.hel.fi/palautews/rest/v1/requests/' + id + '.json?extensions=true';
+                	$("#url").html('<a href=' + url + '>' + url + '</a>');
+			$("#request_url").val(url);
+			$.ajax({
+                        	url:url,
+                        	dataType: 'json', // CORS support
+                        	success:function(json){
+					$.each(json, function(entryIndex, entry) {
+                                		var response = "" +  entry['description'] + '</br>';
+						if (entry['media_url'] != undefined) {
+							var img = "<img src =\"" + entry['media_url'] + "\" />";
+							response += img
+						}
+						$("#image").html(response)
+                        		});
+					$("#json_response").html(JSON.stringify(json,null, 4));
+				},
+                        	error:function(){
+                                	alert("Error");
+                        	},
+                	});
+
+		}
+	});
+	
+
+        function fetchReports(){
+		group.clearLayers();
+                var url = $("#request_url");
+                getReports(url.val())
+        }
+
+        window.fetchReports=fetchReports;
+
+});
+</script>
+</body>
+</html>
