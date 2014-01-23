@@ -14,14 +14,22 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
 <script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="js/spin.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
 <link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
 <link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/default.min.css">
+<script type="text/javascript" src="js/highlight.min.js"></script>
 </head>
 <body>
 <table>
 <tr>
-<td valign="top"><div id="map" style="width: 800px; height: 600px"></div>
-<div id="image">
+<td valign="top">
+REQUEST: <input size="95" type="text" id="request_url" name="serviceid"/>
+<button onclick="fetchReports()">Try it!</button>
+<div id="url"></div>
+<div id="map" style="width: 800px; height: 600px"></div>
+<div id="response" style="width: 800px;">
 <pre class="brush: js">
 $.ajax({
   url:'https://asiointi.hel.fi/palautews/rest/v1/requests.json?extensions=true',
@@ -71,15 +79,36 @@ map.on('popupopen', function(e) {
 </pre>
 </div></td>
 <td valign="top">
-URL: <input size="60" type="text" id="request_url" name="serviceid"/>
-<button onclick="fetchReports()">Try it!</button>
-<div id="url"></div>
-<pre id="json_response"></pre></td>
+RESPONSE:
+<div id="spinner"></div>
+<pre><code id="json_response"></code></pre></td>
 </tr>
 </table>
 <script>
 $(document).ready(function(){
-        var map = L.map('map').setView([60.20, 24.93125813367534], 11);
+        var opts = {
+  		lines: 13, // The number of lines to draw
+  		length:10, // The length of each line
+  		width: 5, // The line thickness
+  		radius: 10, // The radius of the inner circle
+  		corners: 1, // Corner roundness (0..1)
+  		rotate: 0, // The rotation offset
+  		direction: 1, // 1: clockwise, -1: counterclockwise
+  		color: '#000', // #rgb or #rrggbb or array of colors
+  		speed: 1, // Rounds per second
+  		trail: 60, // Afterglow percentage
+  		shadow: false, // Whether to render a shadow
+  		hwaccel: false, // Whether to use hardware acceleration
+  		className: 'spinner', // The CSS class to assign to the spinner
+  		zIndex: 2e9, // The z-index (defaults to 2000000000)
+  		top: 5, // Top position relative to parent in px
+  		left:5  // Left position relative to parent in px
+		};
+	var target = document.getElementById('spinner');
+	var spinner = new Spinner(opts);
+	//var spinner = new Spinner(opts).spin(target);
+
+	var map = L.map('map').setView([60.20, 24.93125813367534], 11);
         L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/256/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
                 maxZoom: 18 }).addTo(map);
@@ -102,12 +131,15 @@ $(document).ready(function(){
                 }
         });
         var redIcon = new RedIcon();
-  	SyntaxHighlighter.all();     
-        getReports('https://asiointi.hel.fi/palautews/rest/v1/requests.json?extensions=true&start_date=2013-11-12T08:03:46Z');
+  	SyntaxHighlighter.all();
+        var base_url = 'https://asiointi.hel.fi/palautews/rest/v1/';
+	var d = moment().subtract('days', 7).format();
+	getReports(base_url + 'requests.json?extensions=true&start_date=' + d);
 	
 	window.getReports=getReports;
  	var group = L.layerGroup();	
 	function getReports(url) {
+		spinner.spin(target);	
 		$("#url").html('<a href=' + url + '>' + url + '</a>');
 		$.ajax({
                         url:url,
@@ -116,8 +148,8 @@ $(document).ready(function(){
                                 var response = "";
                                 $.each(json, function(entryIndex, entry) {
                                         if (entry['lat'] == undefined ||  entry['long'] == undefined) return true;
-					response += "<p>" + entry['description'] + " : " + entry['service_request_id'] + " : " + entry['lat'] + " : " + entry['long'] +  "</p>";
-					var t= "" + entry['service_request_id'];
+					response += getRequestHTML(entry);
+					var t = "" + entry['service_request_id'];
 					var latlng = new L.LatLng(entry['lat'],entry['long']);
                                         var marker = L.marker([entry['lat'],entry['long']]);
                                         marker._serviceId = "" + entry['service_request_id'];;
@@ -125,8 +157,11 @@ $(document).ready(function(){
 					marker.bindPopup(t);
                                         group.addLayer(marker);
                                 });
+				spinner.stop();
+				$("#response").html(response);
 				$("#json_response").html(JSON.stringify(json,null,2));
-                                group.addTo(map);
+                                $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+				group.addTo(map);
                         },
                         error:function(){
                                 alert("Error");
@@ -134,11 +169,12 @@ $(document).ready(function(){
                 });
         }
 	map.on('popupopen', function(e) {
+		spinner.spin(target);
 		var id;
 		if (e.popup._source._serviceId != undefined) id = e.popup._source._serviceId;
 		if (id != undefined){ 
 			var latlng = e.popup._source.getLatLng();
-			var url = 'https://asiointi.hel.fi/palautews/rest/v1/requests/' + id + '.json?extensions=true';
+			var url = base_url + 'requests/' + id + '.json?extensions=true';
                 	$("#url").html('<a href=' + url + '>' + url + '</a>');
 			$("#request_url").val(url);
 			$.ajax({
@@ -146,14 +182,12 @@ $(document).ready(function(){
                         	dataType: 'json', // CORS support
                         	success:function(json){
 					$.each(json, function(entryIndex, entry) {
-                                		var response = "" +  entry['description'] + '</br>';
-						if (entry['media_url'] != undefined) {
-							var img = "<img src =\"" + entry['media_url'] + "\" />";
-							response += img
-						}
-						$("#image").html(response)
+                                		response = getRequestHTML(entry);
+						$("#response").html(response)
                         		});
+					spinner.stop();
 					$("#json_response").html(JSON.stringify(json,null, 4));
+					$('pre code').each(function(i, e) {hljs.highlightBlock(e)});
 				},
                         	error:function(){
                                 	alert("Error");
@@ -163,6 +197,33 @@ $(document).ready(function(){
 		}
 	});
 	
+	map.on('click', function(e) {
+		url_query = base_url + "requests.json?radius=500&lat=" + e.latlng.lat + "&long=" +  e.latlng.lng + "&extensions=true";
+		getReports(url_query);
+		$("#url").html('<a href=' + url_query + '>' + url_query + '</a>');
+		$("#request_url").val(url_query);
+		group.clearLayers();
+		var circle = new L.circle(e.latlng, 500);
+		group.addLayer(circle);
+		/*
+		$.getJSON( url_query, function( data ) { 
+			var items = [];
+			response = "";
+			$.each(data, function(entryIndex, entry) {
+				if (entry['media_url'] != undefined) {
+					response += "<img src=\"" + entry['media_url'] + "\"></img>";
+				}
+				var marker = L.marker([entry['lat'],entry['long']]);
+				if (entry['status'] == "open") marker.setIcon(redIcon);
+        			marker.bindPopup(entry['service_request_id']);
+				group.addLayer(marker);
+			});
+			group.addTo(map);
+			$("#json_response").html(JSON.stringify(data,null,2))
+			$("#image").html(response)
+		});
+		*/
+	});
 
         function fetchReports(){
 		group.clearLayers();
@@ -170,7 +231,18 @@ $(document).ready(function(){
                 getReports(url.val())
         }
 
+	function getRequestHTML(entry){
+		var day = moment(entry['requested_datetime']).format("YYYY-MM-DD HH:mm") ;
+		var response = "<strong>" + entry['extended_attributes']['title'] + "</strong>" +  "<p style=\"font-size:12px\">" + entry['status'] + " " + day + "</p>" + entry['description'] + '</br>';
+	        if (entry['media_url'] != undefined) {
+                	response += "<a href=\"" + entry['media_url'] + "\" target=\"_blank\"><img width=\"400\" src =\"" + entry['media_url'] + "\" /></a></br>";
+                }
+               	response += "<hr/>";
+		return response;
+	}
+
         window.fetchReports=fetchReports;
+	window.getRequestHTML=getRequestHTML;
 
 });
 </script>
