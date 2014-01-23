@@ -14,7 +14,7 @@
 
 </head>
 <body>
-<div id="map" style="width: 600px; height: 400px"></div>
+<div id="map" style="width: 1300px; height: 700px"></div>
 <script>
 var map = L.map('map').setView([60.20, 24.93125813367534], 11);
 L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/256/{z}/{x}/{y}.png', {
@@ -40,7 +40,6 @@ $ch = curl_init();
 // SSL version 1 is TLS 1.0
 $opts = array(CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_TIMEOUT => 4,
         CURLOPT_SSLVERSION => 1);
 curl_setopt_array($ch, $opts);
 
