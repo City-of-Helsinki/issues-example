@@ -3,7 +3,6 @@
 <head>
 	<title>Mapviewer for issue reporting API</title>
 	<meta charset="utf-8" />
-
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
@@ -12,81 +11,96 @@
  <![endif]-->
 <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
-<script type="text/javascript" src="js/syntaxhighlighter/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
-<script type="text/javascript" src="js/spin.min.js"></script>
-<script type="text/javascript" src="js/moment.min.js"></script>
-<link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
-<link href="js/syntaxhighlighter/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="css/default.min.css">
-<script type="text/javascript" src="js/highlight.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://dev.hel.fi/open311-test/js/spin.min.js"></script>
+<script type="text/javascript" src="http://dev.hel.fi/open311-test/js/moment.min.js"></script>
+<link rel="stylesheet" href="http://dev.hel.fi/open311-test/css/default.min.css">
+<script type="text/javascript" src="http://dev.hel.fi/open311-test/js/highlight.min.js"></script>
+
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="http://dev.hel.fi/open311-test/css/leaflet.awesome-markers.css">
+<script src="http://dev.hel.fi/open311-test/js/leaflet.awesome-markers.js"></script>
+<script src="http://dev.hel.fi/open311-test/js/jquery.switchButton.js"></script>
+<link rel="stylesheet" href="http://dev.hel.fi/open311-test/css/jquery.switchButton.css">
+<style>
+html, body,#output, #map {
+	height: 100%;
+        width: 100%;
+}
+
+#json_response_wrapper{
+  height:800px;
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 60px;
+  bottom: 20px;
+  width: 450px;
+  opacity: 0.85;
+  z-index: 10;
+
+}
+
+#json_response {
+  height:600px;
+  width: 450px;
+  /*display: block;*/
+  /*overflow: auto;*/
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+#json_images {
+  height: 450px;
+  width: 460px;
+  top: 700px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+#spinner {
+   position: absolute;
+   top: 10px;
+   right:70px;
+}
+
+#center_image {
+    display:none;
+    position: absolute;
+    height: 200px;
+    width: 400px;
+    margin: -100px 0 0 -200px;
+    top: 50%;
+    left: 50%;
+}
+
+.switch-wrapper {
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  font-size: 25px;
+}
+
+</style>
 </head>
 <body>
-<table>
-<tr>
-<td valign="top">
-REQUEST: <input size="95" type="text" id="request_url" name="serviceid"/>
-<button onclick="fetchReports()">Try it!</button>
-<div id="url"></div>
-<div id="map" style="width: 800px; height: 600px"></div>
-<div id="response" style="width: 800px;">
-<pre class="brush: js">
-$.ajax({
-  url:'https://asiointi.hel.fi/palautews/rest/v1/requests.json?extensions=true',
-  dataType: 'json',
-  success:function(json){
-    $.each(json, function(entryIndex, entry) {
-       var marker = L.marker([entry['lat'],entry['long']]);
-       marker._serviceId = entry['service_request_id'];
-       marker.bindPopup(t);
-       group.addLayer(marker);
-    });
-    group.addTo(map);
-    $("#json_response").html(JSON.stringify(json,null,2));
-  },
-  error:function(){
-    alert("Error");
-  },
-});
+<div id="request">REQUEST: <input size="130" type="text" id="request_url" name="serviceid"/>
+<button onclick="fetchReports()">Try it!</button><div id="spinner"></div></div>
+<a href="http://dev.hel.fi/node/206" title="Use detailed status values for showing even more accurate feedback status info" target="_blank">SECRET SWITCH</a>: <div class="switch-wrapper"><input type="checkbox" name="detailed_status" id="detailed_status">
+</div>
 
-map.on('popupopen', function(e) {
-  var id;
-  if (e.popup._source._serviceId != undefined) id = e.popup._source._serviceId;
-  if (id != undefined){
-    var latlng = e.popup._source.getLatLng();
-    var url = 'https://asiointi.hel.fi/palautews/rest/v1/requests/' + id + '.json';
-    $("#url").html('<a href=' + url + '>' + url + '</a>');
-    $.ajax({
-      url:url,
-      dataType: 'json',
-      success:function(json){
-	$.each(json, function(entryIndex, entry) {
-        var response = "" +  json['description'] + '</br>';
-        if (json['media_url'] != undefined) {
-          var img = "<img src =\"" + json['media_url'] + "\" />";
-          response += img
-        }
-        $("#image").html(response)
-        $("#json_response").html(JSON.stringify(json,null, 4));
-      },
-      error:function(){
-        alert("Error");
-      },
-    });
-  }
-});
-
-</pre>
-</div></td>
-<td valign="top">
-RESPONSE:
-<div id="spinner"></div>
-<pre><code id="json_response"></code></pre></td>
-</tr>
-</table>
+<!--<div id="url"></div>-->
+<div id="output">
+<div id="map"></div>
+<div id="json_response_wrapper"><pre><code id="json_response"></code></pre> <div id="json_images"></div></div>
+</div>
 <script>
 $(document).ready(function(){
-        var opts = {
+        
+	var opts = {
   		lines: 13, // The number of lines to draw
   		length:10, // The length of each line
   		width: 5, // The line thickness
@@ -103,91 +117,130 @@ $(document).ready(function(){
   		zIndex: 2e9, // The z-index (defaults to 2000000000)
   		top: 5, // Top position relative to parent in px
   		left:5  // Left position relative to parent in px
-		};
+	};
 	var target = document.getElementById('spinner');
 	var spinner = new Spinner(opts);
-	//var spinner = new Spinner(opts).spin(target);
-
-	var map = L.map('map').setView([60.20, 24.93125813367534], 11);
-        L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/256/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-                maxZoom: 18 }).addTo(map);
-
-        if (navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(centerMap,error);
-        }
-
-        function centerMap(position){
-                map.setView([position.coords.latitude, position.coords.longitude], 15);
-        }
-
-        function error(msg){
-        }
-
-        //TODO: red icon for open requests
-        var RedIcon = L.Icon.Default.extend({
-                options: {
-                        iconUrl: 'icons/marker-icon-red.png'
-                }
-        });
-        var redIcon = new RedIcon();
-  	SyntaxHighlighter.all();
-        var base_url = 'https://asiointi.hel.fi/palautews/rest/v1/';
-	var d = moment().subtract('days', 7).format();
-	getReports(base_url + 'requests.json?extensions=true&start_date=' + d);
 	
-	window.getReports=getReports;
- 	var group = L.layerGroup();	
-	function getReports(url) {
-		spinner.spin(target);	
-		$("#url").html('<a href=' + url + '>' + url + '</a>');
+	var show_detailed_status= false;
+		
+	options = { checked: false,
+		    width: 60,
+  		    height: 20,
+                    button_width: 30
+ 	};
+	$("input#detailed_status").switchButton(options);
+	$(':checkbox').change(function() {
+		var $this = $(this);
+		if ($this.is(':checked')) {
+			var url = $("#request_url").val();
+			var n = url.indexOf("extensions=true"); 
+			if (n == -1 ) url = url + "&extensions=true";
+			show_detailed_status = true;
+			set_url_ui(url);
+			fetchReports();
+    		}else {	
+			var url = $("#request_url").val();
+			url = url.replace('extensions=true','');
+			show_detailed_status = false;
+			set_url_ui(url);
+			fetchReports();
+		}
+	});
+	
+	var map = L.map('map').setView([60.20, 24.93125813367534], 11);
+	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 18, attribution: osmAttrib});
+        osm.addTo(map)
+	/*
+	L.tileLayer('http://{s}.tile.cloudmade.com/31d379fb8a444330931fb9f0baa6411f/998/256/{z}/{x}/{y}.png', {
+	L.tileLayer('http://geoserver.hel.fi/mapproxy/wmts/osm-sm/etrs_tm35fin/{z}/{x}/{y}.png',{        
+        	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+                maxZoom: 18 }).addTo(map);
+        */
+	var base_url = 'https://asiointi.hel.fi/palautews/rest/v1/';
+	//var base_url = 'http://acc.dev.civity.nl/api/open311/';
+	//var base_url = 'https://open311.cm-lisboa.pt/GeoReport/v1/';	
+	//var base_url = 'http://open311.dataplatform.nl/opentunnel/open311/v21/';
+	var jurisdiction = '';
+	//var jurisdiction = '&jurisdiction_id=0363&api_key=y8EQ4EUkTQSIZl1R62H5777g';
+	//var jurisdiction = '&jurisdiction_id=0363&api_key=gt55Jb24ge3z399KSqAlF4KL';
+	var now = moment().format("YYYY-MM-DD");
+	var d = moment().subtract('days', 1).format("YYYY-MM-DD");
+	//makeApiRequest(base_url + 'requests.json?extensions=true&start_date=' + d + '&end_date=' now, true);
+	makeApiRequest(base_url + 'requests.json' + '?start_date=' + d + '&end_date=' + now + jurisdiction, true);	
+
+	window.getReports=makeApiRequest;
+ 	var group = L.layerGroup();
+	
+	function makeApiRequest(url, useBounds) {
+		startSpinner();	
+		set_url_ui(url);
 		$.ajax({
                         url:url,
                         dataType: 'json', // CORS support in API
                         success:function(json){
                                 var response = "";
+				var bounds = L.latLngBounds([]);
+				var reg = new RegExp('services.json','i');
+				var count = 0;
+				group.clearLayers();
                                 $.each(json, function(entryIndex, entry) {
-                                        if (entry['lat'] == undefined ||  entry['long'] == undefined) return true;
-					response += getRequestHTML(entry);
-					var t = "" + entry['service_request_id'];
-					var latlng = new L.LatLng(entry['lat'],entry['long']);
-                                        var marker = L.marker([entry['lat'],entry['long']]);
-                                        marker._serviceId = "" + entry['service_request_id'];;
-					if (entry['status'] == "open") marker.setIcon(redIcon);
-					marker.bindPopup(t);
-                                        group.addLayer(marker);
+					if (reg.test(url)) {
+						//alert("services.json");
+						response += getServicesHTML(entry);
+						count=count+1;
+					} else if (entry['lat'] == undefined ||  entry['long'] == undefined) {
+						return true;
+					} else {
+						response += getServiceRequestHTML(entry);
+						//var t = entry['service_request_id'];
+						var latlng = new L.LatLng(entry['lat'],entry['long']);
+						if (useBounds) bounds.extend(latlng);
+                                        	var marker = L.marker([entry['lat'],entry['long']]);
+                                        	marker._serviceId = entry['service_request_id'];;
+						setIcon(marker,entry);
+						marker.bindPopup(entry['service_request_id']);
+                                        	group.addLayer(marker);
+						count = count + 1;
+					}
                                 });
-				spinner.stop();
-				$("#response").html(response);
+				stopSpinner();
+				$("#json_images").html(response);
 				$("#json_response").html(JSON.stringify(json,null,2));
                                 $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+				$("#spinner").html(count + " item(s) fetched.");
 				group.addTo(map);
+				if (useBounds) map.fitBounds(bounds);
                         },
                         error:function(){
                                 alert("Error");
                         },
                 });
         }
+
+	
+	
 	map.on('popupopen', function(e) {
-		spinner.spin(target);
+		startSpinner();
 		var id;
 		if (e.popup._source._serviceId != undefined) id = e.popup._source._serviceId;
 		if (id != undefined){ 
 			var latlng = e.popup._source.getLatLng();
-			var url = base_url + 'requests/' + id + '.json?extensions=true';
-                	$("#url").html('<a href=' + url + '>' + url + '</a>');
-			$("#request_url").val(url);
+			var url = base_url + 'requests/' + id + '.json?extensions=true' + jurisdiction;
+			set_url_ui(url);
 			$.ajax({
                         	url:url,
                         	dataType: 'json', // CORS support
                         	success:function(json){
 					$.each(json, function(entryIndex, entry) {
-                                		response = getRequestHTML(entry);
-						$("#response").html(response)
+                                		response = getServiceRequestHTML(entry);
+						$("#json_images").html(response)
                         		});
-					spinner.stop();
+					stopSpinner();
 					$("#json_response").html(JSON.stringify(json,null, 4));
 					$('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+					$("#spinner").html("1 item fetched.");
 				},
                         	error:function(){
                                 	alert("Error");
@@ -198,51 +251,99 @@ $(document).ready(function(){
 	});
 	
 	map.on('click', function(e) {
-		url_query = base_url + "requests.json?radius=500&lat=" + e.latlng.lat + "&long=" +  e.latlng.lng + "&extensions=true";
-		getReports(url_query);
-		$("#url").html('<a href=' + url_query + '>' + url_query + '</a>');
-		$("#request_url").val(url_query);
-		group.clearLayers();
+		url_query = base_url + "requests.json?radius=500&lat=" + e.latlng.lat + "&long=" +  e.latlng.lng + "&extensions=true" + jurisdiction;
+		makeApiRequest(url_query, true);
+		set_url_ui(url_query);
 		var circle = new L.circle(e.latlng, 500);
 		group.addLayer(circle);
-		/*
-		$.getJSON( url_query, function( data ) { 
-			var items = [];
-			response = "";
-			$.each(data, function(entryIndex, entry) {
-				if (entry['media_url'] != undefined) {
-					response += "<img src=\"" + entry['media_url'] + "\"></img>";
-				}
-				var marker = L.marker([entry['lat'],entry['long']]);
-				if (entry['status'] == "open") marker.setIcon(redIcon);
-        			marker.bindPopup(entry['service_request_id']);
-				group.addLayer(marker);
-			});
-			group.addTo(map);
-			$("#json_response").html(JSON.stringify(data,null,2))
-			$("#image").html(response)
-		});
-		*/
 	});
 
         function fetchReports(){
-		group.clearLayers();
                 var url = $("#request_url");
-                getReports(url.val())
+                makeApiRequest(url.val(), true)
         }
 
-	function getRequestHTML(entry){
+	function getServiceRequestHTML(entry){
 		var day = moment(entry['requested_datetime']).format("YYYY-MM-DD HH:mm") ;
-		var response = "<strong>" + entry['extended_attributes']['title'] + "</strong>" +  "<p style=\"font-size:12px\">" + entry['status'] + " " + day + "</p>" + entry['description'] + '</br>';
-	        if (entry['media_url'] != undefined) {
-                	response += "<a href=\"" + entry['media_url'] + "\" target=\"_blank\"><img width=\"400\" src =\"" + entry['media_url'] + "\" /></a></br>";
-                }
-               	response += "<hr/>";
+		var title = 'No title';
+		if  (entry['extended_attributes'] != undefined ) title = entry['extended_attributes']['title'];
+		//var response = "<strong>" + title + "</strong>" +  "<p style=\"font-size:12px\">" + entry['status'] + " " + day + "</p>" + entry['description'] + '</br>';
+	        var response = "";
+		if (entry['media_url'] != undefined) {
+                	response += "<a href=\"" + entry['media_url'] + "\" target=\"_blank\"><img width=\"120\" src =\"" + entry['media_url'] + "\" title=\"" + entry['service_request_id'] + " " + now + " " + title + "\" /></a>";
+		}
 		return response;
 	}
+	
+	function getServicesHTML(entry){
+                var name = entry['service_name'];
+		var code = entry['service_code'];
+                var response = "<strong>" + entry['service_name']  + "</strong>" +  "<p style=\"font-size:12px\">" + entry['service_code'] + "</p>" + entry['description'] + '</br>';
+                response += "<hr/>";
+                return response;
+       }
 
-        window.fetchReports=fetchReports;
-	window.getRequestHTML=getRequestHTML;
+	function setIcon(marker, entry){
+		var state = entry['status'];
+		var media_url = entry['media_url']
+		if (show_detailed_status){
+			if (entry['extended_attributes'] != undefined)  {
+                        	var detailed_status = entry['extended_attributes']['detailed_status']
+                                var n = detailed_status.indexOf(",");
+                                if (n != -1) {
+                                	var res = detailed_status.substr(n+1);
+                                        if (res == 'PUBLIC_WORKS_NEW' || res == 'PUBLIC_WORKS_IN_PROGRESS') state = 'open';
+					if (res == 'PUBLIC_WORKS_COMPLETED') state = 'closed';	
+					//alert("found: " + res);
+                                }
+                        }
+		}
+	
+		if (state != undefined && state == "open" && media_url != undefined && media_url != "" ) marker.setIcon(redCameraIcon);
+		else if (state != undefined && state == "closed" && media_url != undefined && media_url != "" ) marker.setIcon(blueCameraIcon);
+		else if (state != undefined && state == "closed") marker.setIcon(blueIcon);
+		else  marker.setIcon(redIcon);
+		return marker;	
+	}
+		
+       var blueCameraIcon = L.AwesomeMarkers.icon({
+                icon: 'camera',
+                prefix: 'fa',
+                markerColor: 'blue'
+        });
+
+	var blueIcon = L.AwesomeMarkers.icon({
+                icon: 'dot-circle-o',
+                prefix: 'fa',
+                markerColor: 'blue'
+        });
+
+	var redCameraIcon = L.AwesomeMarkers.icon({
+                icon: 'camera',
+                prefix: 'fa',
+                markerColor: 'red'
+        });
+
+        var redIcon = L.AwesomeMarkers.icon({
+                icon: 'dot-circle-o',
+                prefix: 'fa',
+                markerColor: 'red'
+        });
+
+	function startSpinner(){
+		spinner.spin(target);	
+	}
+	
+	function stopSpinner(){
+		spinner.stop();
+	} 
+	
+	function set_url_ui(url){
+		 //$("#url").html('<a href=' + url + '>' + url + '</a>');
+                 $("#request_url").val(url);
+	}
+
+	window.fetchReports=fetchReports;
 
 });
 </script>
