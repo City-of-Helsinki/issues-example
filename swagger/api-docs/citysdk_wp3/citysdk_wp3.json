@@ -1,0 +1,474 @@
+{
+
+    "apiVersion": "0.1",
+    "basePath": "https://asiointi.hel.fi/palautews/rest/v1",
+    "resourcePath": "",
+    "apis": [
+        {
+            "path": "/services.{response_format}",
+            "description": "Get Service descriptions",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "List of services",
+                    "nickname": "List of services",
+                    "errorResponses": [
+                        {
+                            "code": "400",
+                            "reason": "The URL request is invalid or service is not running or reachable. Client should notify us after checking URL"
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "name": "response_format",
+                            "description": "Response format, can be either xml or json",
+                            "paramType": "path",
+                            "defaultValue": "json",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "locale",
+                            "description": "Preferred language",
+                            "paramType": "query",
+                            "defaultValue": "",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        }
+                    ],
+                    "supportedContentTypes": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+	{
+            "path": "/services/{service_code}.{response_format}",
+            "description": "Service definition",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Query service definition",
+                    "nickname": "serviceDefinition",
+                    "errorResponses": [
+                         {
+                            "code": "400",
+                            "reason": "The URL request is invalid or service is not running or reachable. Client should notify us after checking URL"
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "name": "response_format",
+                            "description": "Response format, can be either xml or json",
+                            "paramType": "path",
+                            "defaultValue": "json",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "locale",
+                            "description": "Preferred language",
+                            "paramType": "query",
+                            "defaultValue": "",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_code",
+                            "description": "Service code id",
+                            "paramType": "path",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        }
+                    ],
+                    "supportedContentTypes": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/requests.{response_format}",
+            "description": "Query list of service requests",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "List of service requests",
+                    "nickname": "query",
+                    "errorResponses": [
+                     	{
+                            "code": "400",
+                            "reason": "The URL request is invalid or service is not running or reachable. Client should notify us after checking URL"
+                        }
+		    ],
+                    "parameters": [
+			{
+                            "name": "response_format",
+                            "description": "Response format, can be either xml or json",
+                            "paramType": "path",
+                            "defaultValue": "json",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_code",
+                            "description": "Comma separated list of service_code values",
+                            "paramType": "query",
+                            "defaultValue": "",
+                            "required": false,
+                            "allowMultiple": true,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_request_id",
+                            "description": "Unique service request id",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": true,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "start_time",
+                            "description": "Query service requests after start time",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "end_time",
+                            "description": "Query service requests before the end time",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "updated_after",
+                            "description": "Earliest updated_datetime to include in search.",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "updated_before",
+                            "description": "Latest updated_datetime to include in search.",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "radius",
+                            "description": "Search service requests within radius from the lat,long center",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "lat",
+                            "description": "lat coordinate of the location searct",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "long",
+                            "description": "long coordinate of the location search",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_object_id",
+                            "description": "Search service requests assigned to certain service objects, e.g trash bin",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_object_type",
+                            "description": "Type of the service object included in the service_object_id",
+                            "paramType": "query",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "extensions",
+                            "description": "True if city specific extensions are requested. Default value is false.",
+                            "paramType": "query",
+                            "defaultValue": "",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        }
+
+
+                    ],
+                    "supportedContentTypes": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/requests/{service_request_id}.{response_format}",
+            "description": "Query individual service request",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Query individual service request",
+                    "nickname": "serviceRequest",
+                    "errorResponses": [
+                     	{
+                            "code": "400",
+                            "reason": "The URL request is invalid or service is not running or reachable. Client should notify us after checking URL"
+                        }
+		    ],
+                    "parameters": [
+			{
+                            "name": "response_format",
+                            "description": "Response format, can be either xml or json",
+                            "paramType": "path",
+                            "defaultValue": "json",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "service_request_id",
+                            "description": "Unique service request id",
+                            "paramType": "path",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "extensions",
+                            "description": "True if city specific extensions are requested. Default value is false.",
+                            "paramType": "query",
+                            "defaultValue": "",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        }
+                    ],
+                    "supportedContentTypes": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/requests.{response_format}",
+            "description": "Posting service requests",
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "summary": "Posting service request",
+                    "nickname": "requests",
+                    "errorResponses": [
+                    	{
+                            "code": "400",
+                            "reason": "The URL request is invalid or service is not running or reachable. Client should notify us after checking URL"
+                        },
+                        {
+                            "code": "403",
+                            "reason": "Missing or Invalid API Key"
+                        }
+
+		    ],
+                    "parameters": [
+                        {
+                            "name": "response_format",
+                            "description": "Response format, can be either xml or json",
+                            "paramType": "path",
+                            "defaultValue": "json",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "api_key",
+                            "description": "API key",
+                            "paramType": "form",
+                            "defaultValue": "",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "service_code",
+                            "description": "Service_code",
+                            "paramType": "form",
+                            "defaultValue": "",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "description",
+                            "description": "Description of the service request",
+                            "paramType": "form",
+                            "defaultValue": "",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "lat",
+                            "description": "Latitude",
+                            "paramType": "form",
+                            "defaultValue": "50",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "long",
+                            "description": "Longitude",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "email",
+                            "description": "Email",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "first_name",
+                            "description": "First name",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "last_name",
+                            "description": "Last name",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_object_id",
+                            "description": "Service object id",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "service_object_type",
+                            "description": "Service object type",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "title",
+                            "description": "Title description of service request",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "media_url",
+                            "description": "Link to media source such as image",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+			{
+                            "name": "media[]",
+                            "description": "Media file",
+                            "paramType": "body",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "File"
+                        },
+                        {
+                            "name": "address_string",
+                            "description": "Address of the service request",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        },
+                        {
+                            "name": "phone",
+                            "description": "Phone number",
+                            "paramType": "form",
+                            "required": false,
+                            "allowMultiple": false,
+                            "dataType": "String"
+                        }
+                    ],
+                    "supportedContentTypes": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "service_request": {
+            "properties": {
+                "service_request_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "service_code": {
+                    "type": "string"
+                },
+                "lat": {
+                    "type": "float"
+                },
+                "long": {
+                    "type": "float"
+                }
+            },
+            "id": "resultado"
+        },
+        "service_definition": {
+            "properties": {
+                "attributes": {
+                    "type": "List"
+                },
+                "service_code": {
+                    "type": "string"
+                }
+            },
+            "id": "service_definition"
+        }
+    }
+
+}

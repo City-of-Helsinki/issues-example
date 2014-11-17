@@ -1,0 +1,17 @@
+{
+    "apiVersion": "1.0.0",
+    "swaggerVersion": "1.2",
+    "apis": [
+        {
+            "path": "/citysdk_wp3",
+            "description": "CitySDK Issue reporting API"
+        }
+    ]
+    ,
+    "info": {
+        "title": "CitySDK Issue Reporting API",
+        "description": "This is a swagger page of CitySDK Issue reporting API.",
+        "termsOfServiceUrl": "http://dev.hel.fi/issuereporting/tos",
+        "contact": "jaakko.rajaniemi@hel.fi"
+    }
+}
