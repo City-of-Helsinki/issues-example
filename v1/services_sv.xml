@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+	<service>
+		<service_code>172</service_code>
+		<service_name>Vandalism</service_name>
+		<description>Ge respons om du hittar egendom eller utrustning är trasig.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>bench,parks,trashbins</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>246</service_code>
+		<service_name>Sanitation kränkning</service_name>
+		<description>Rapport om du hittar skräp eller överfyllda soptunnor.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>garbage, debris</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>176</service_code>
+		<service_name>Klottersanering</service_name>
+		<description>Rapport om graffiti eller andra målningar behöver tas bort.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>graffiti</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>171</service_code>
+		<service_name>Potthål</service_name>
+		<description>Rapportera potthål i allmänna gator.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>street condition,potholes</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>198</service_code>
+		<service_name>Vägmärken</service_name>
+		<description>Rapport om info skyltar bryts</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>traffic sign</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>199</service_code>
+		<service_name>Info tecken</service_name>
+		<description>Rapport om info skyltar bryts</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>info sign</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>174</service_code>
+		<service_name>Parker</service_name>
+		<description>Rapport om något i parken behöver åtgärdas fixering.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>211</service_code>
+		<service_name>Lekplatser och idrottsparker</service_name>
+		<description>Rapport om utrustning på lekplatser eller parker sport är trasiga eller något annat det behöver åtgärdas.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>234</service_code>
+		<service_name>Skogar</service_name>
+		<description>Rapport om något i skogen måste tas om hand.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>180</service_code>
+		<service_name>Annan fråga som skall fastställas</service_name>
+		<description>Använd denna kategori om du har hittat något trasigt och det inte passar in i andra kategorier.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Other</group>
+	</service>
+</services>

@@ -1,0 +1,37 @@
+﻿{
+  "changeset":"2013-05-08 09:20",
+  "contact":"You can email or call for assistance jaakko.rajaniemi@hel.fi +358 40 5165931",
+  "key_service":"For test environment you can use api key: f1301b1ded935eabc5faa6a2ce975f6. For production environment, you can request by contacting jaakko.rajaniemi@hel.fi +358 40 5165931",
+  "endpoints":[
+    {
+      "specification":"http://wiki.open311.org/GeoReport_v2",
+      "url":"http://dev.hel.fi/open311-test/v1",
+      "changeset":"2013-05-08 09:20",
+      "type":"test",
+      "formats":[
+        "text/xml",
+        "application/json"
+      ],
+      "locales":[
+        "fi_FI",
+        "en_GB",
+        "en_US"
+      ]
+    },
+    {
+      "specification":"http://wiki.open311.org/GeoReport_v2",
+      "url":"https://asiointi.hel.fi/palautews/rest/v1",
+      "changeset":"2013-05-08 09:20",
+      "type":"production",
+      "formats":[
+        "text/xml",
+	"application/json"
+      ],
+      "locales":[
+	"fi_FI",
+	"en_GB",
+	"en_US"
+      ]
+    }
+  ]
+}

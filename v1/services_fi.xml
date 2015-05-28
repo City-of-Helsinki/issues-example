@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+	<service>
+		<service_code>172</service_code>
+		<service_name>Ilkivalta</service_name>
+		<description>Onko puistonpenkki heitetty ojaan tai infotaulu rikottu? Anna palautetta ilkivaltaan liittyen.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>ilkivalta, penkit, istuimet,pöydät, katokset, grillit, lipputangot, roska-astiat</keywords>
+		<group>Puhtaanapito</group>
+	</service>
+	<service>
+		<service_code>246</service_code>
+		<service_name>Roskaaminen</service_name>
+		<description>Ilmoita, jos havaitset että suuria määriä roskia yleisillä alueilla, puistoissa tai metsissä.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>roska,jäte</keywords>
+		<group>Puhtaanapito</group>
+	</service>
+	<service>
+		<service_code>176</service_code>
+		<service_name>Töhryjen poisto</service_name>
+		<description>Ilmoita, jos paikkoja tai seiniä on töhritty.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>roska,jäte</keywords>
+		<group>Puhtaanapito</group>
+	</service>
+	<service>
+		<service_code>171</service_code>
+		<service_name>Katujen kunto</service_name>
+		<description>Onko tiessä kuoppa? Anna palautetta katujen kuntoon liittyen.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>tie,kuoppa</keywords>
+		<group>Katujen kunto ja liikenne</group>
+	</service>
+	<service>
+		<service_code>198</service_code>
+		<service_name>Liikennemerkit</service_name>
+		<description>Ilmoita, jos liikennemerkki on ajettu nurin, vinossa tai siinä on muuta huomautettavaa.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>liikennemerkki,valot</keywords>
+		<group>Katujen kunto ja liikenne</group>
+	</service>
+	<service>
+		<service_code>199</service_code>
+		<service_name>Kyltit ja opasteet</service_name>
+		<description>Ilmoita, jos kaupungin kylteissä ja opasteissa on huomautettavaa.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>kyltit,opasteet</keywords>
+		<group>Katujen kunto ja liikenne</group>
+	</service>
+	<service>
+		<service_code>174</service_code>
+		<service_name>Puistot</service_name>
+		<description>Ilmoita, jos huomaat puiston olevan huonossa kunnossa.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Metsät ja puistot</group>
+	</service>
+	<service>
+		<service_code>211</service_code>
+		<service_name>Leikki- ja liikuntapuistot</service_name>
+		<description>Ilmoita, jos leikki- tai liikuntapuiston välineissä on huomautettavaa.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Metsät ja puistot</group>
+	</service>
+	<service>
+		<service_code>234</service_code>
+		<service_name>Metsät</service_name>
+		<description>Ilmoita, jos metsä tarvitsee hoitoa.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Metsät ja puistot</group>
+	</service>
+	<service>
+		<service_code>180</service_code>
+		<service_name>Muu korjattava asia</service_name>
+		<description>Onko joku muu asia joka vaatisi kaupungin toimia?</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Muut korjattavat asiat</group>
+	</service>
+</services>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services>
+	<service>
+		<service_code>172</service_code>
+		<service_name>Vandalism</service_name>
+		<description>Give feedback if you find that property or equipment is broken.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>bench,parks,trashbins</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>246</service_code>
+		<service_name>Sanitation violation</service_name>
+		<description>Report if you find garbage or overflowing trash bins.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>garbage, debris</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>176</service_code>
+		<service_name>Graffiti removal</service_name>
+		<description>Report if graffiti or other paintings need removal.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>graffiti</keywords>
+		<group>Sanitation</group>
+	</service>
+	<service>
+		<service_code>171</service_code>
+		<service_name>Potholes</service_name>
+		<description>Report potholes in public streets.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>street condition,potholes</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>198</service_code>
+		<service_name>Traffic signs</service_name>
+		<description>Report broken traffic signs</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>traffic sign</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>199</service_code>
+		<service_name>Info signs</service_name>
+		<description>Report if info signs or other signs needs fixing.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords>info sign</keywords>
+		<group>Traffic and street condition</group>
+	</service>
+	<service>
+		<service_code>174</service_code>
+		<service_name>Parks</service_name>
+		<description>Report if something in the park needs fixing.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>211</service_code>
+		<service_name>Playgrounds and sports parks</service_name>
+		<description>Report if equipment in the playgrounds or sport parks are broken or something else there needs fixing.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>234</service_code>
+		<service_name>Forests</service_name>
+		<description>Report if something in forests needs to be taken care.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Parks and forests</group>
+	</service>
+	<service>
+		<service_code>180</service_code>
+		<service_name>Other issue to be fixed</service_name>
+		<description>Use this category if you have found something broken and it does not fit into other categories.</description>
+		<metadata>false</metadata>
+		<type>realtime</type>
+		<keywords></keywords>
+		<group>Other</group>
+	</service>
+</services>
