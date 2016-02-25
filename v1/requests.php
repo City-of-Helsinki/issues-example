@@ -68,12 +68,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     		}
 	}
 
-	$string_data =  "$service_request_id,$lat,$long,$address_string,$zipcode,\"$title\",\"$description\",$status,$detailed_status,\"$status_notes\",$service_code,$requested_datetime,$updated_datetime,$service_object_id,$service_object_type,$media_url\n";
+        $arr = array(
+             $service_request_id,
+             $lat,
+             $long,
+             $address_string,
+             $zipcode,
+             $title,
+             $description,
+             $status,
+             $detailed_status,
+             $status_notes,
+             $service_code,
+             $requested_datetime,
+             $updated_datetime,
+             $service_object_id,
+             $service_object_type,
+             $media_url);
 
-	//echo $stringData . "\n";
+        $fh = fopen($requests_file, 'a');
+        fputcsv($fh, $arr);
 
-	$fh = fopen($requests_file, 'a');
-	fwrite($fh, $string_data);
 	fclose($fh);
 	print "[{\"service_request_id\":\"$service_request_id\",\"service_notice\":\"\"}]";
 	

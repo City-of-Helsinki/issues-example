@@ -10,10 +10,8 @@ function print_service_request($data,$extensions,$format){
         print "\"zipcode\":\"$data[4]\",\n";
 
 	// JSON requires new line characters be escaped
-	$text = str_replace("\r\n", "\n", $data[6]);
-    	$text = str_replace("\r", "\n", $text);
-    	$text = str_replace("\n", "\\n", $text);        
-	print "\"description\":\"$text\",\n";
+        $text = json_encode($data[6]);
+	print "\"description\":$text,\n";
         print "\"status\":\"$data[7]\",\n";
         print "\"status_notes\":\"$data[9]\",\n";
         if ($data[15] != "") print "\"media_url\":\"$data[15]\",\n";
