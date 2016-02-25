@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 			$b = move_uploaded_file($tmp_name, $d);
     		}
 	}
-        $escaped = array();
+
         $arr = array(
              $service_request_id,
              $lat,
@@ -85,16 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
              $service_object_id,
              $service_object_type,
              $media_url);
-        foreach ($arr as $val) {
-             array_push($escaped, json_encode($val));
-        }
-        $string_data = implode(',', $escaped);
-        $string_data .= "\n";
 
-	//echo $stringData . "\n";
+        $fh = fopen($requests_file, 'a');
+        fputcsv($fh, $arr);
 
-	$fh = fopen($requests_file, 'a');
-	fwrite($fh, $string_data);
 	fclose($fh);
 	print "[{\"service_request_id\":\"$service_request_id\",\"service_notice\":\"\"}]";
 	
